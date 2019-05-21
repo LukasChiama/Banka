@@ -1,5 +1,6 @@
 import pool from './index';
 
+
 console.log('Creating tables...');
 
 (async () => {
