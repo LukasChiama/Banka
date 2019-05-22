@@ -25,7 +25,7 @@ export default class Transaction {
     return rows[0];
   }
 
-  async credit(balance) {
+  async credit() {
     const queryString = `INSERT INTO transactions (accountnumber, createdon,
       cashier, type, amount, oldbalance, newbalance)
       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
