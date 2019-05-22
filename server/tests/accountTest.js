@@ -1,7 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
-/* eslint-disable import/no-extraneous-dependencies */
-
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
@@ -17,6 +13,8 @@ import {
 
 const { expect } = chai;
 chai.use(chaiHttp);
+
+/* global it, describe, before */
 
 let clientToken;
 let staffToken;
@@ -60,7 +58,8 @@ describe('ACCOUNT TEST DATA', () => {
 describe('ACCOUNT TEST', () => {
   describe('CREATE A BANK ACCOUNT', () => {
     it('it should return 403 if account type is empty', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/accounts')
         .set({ Authorization: `Bearer ${clientToken}` })
         .send(emptyAccountType);
@@ -69,7 +68,8 @@ describe('ACCOUNT TEST', () => {
     });
 
     it('it should return 403 if account type is wrong', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/accounts')
         .set({ Authorization: `Bearer ${clientToken}` })
         .send(wrongAccountType);
@@ -78,7 +78,8 @@ describe('ACCOUNT TEST', () => {
     });
 
     it('it should return 403 if unauthorized', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/accounts')
         .set({ Authorization: 'Bearer wrong token' })
         .send(accountType);
@@ -89,7 +90,8 @@ describe('ACCOUNT TEST', () => {
 
   describe('TEST ACTIVATE/DEACTIVATE ACCOUNT', () => {
     it('it should return 403 if account number is wrong', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .patch(`/api/v1/accounts/${wrongAcctNo}`)
         .set({ Authorization: `Bearer ${staffToken}` });
       expect(res).to.have.status(403);
@@ -97,7 +99,8 @@ describe('ACCOUNT TEST', () => {
     });
 
     it('it should return 403 if unauthorized', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .patch(`/api/v1/accounts/${clientAcct}`)
         .set({ Authorization: 'Bearer wrong token' });
       expect(res).to.have.status(403);
@@ -107,7 +110,8 @@ describe('ACCOUNT TEST', () => {
 
   describe('TEST GET SPECIFIC ACCOUNT', () => {
     it('it should return 403 if account number is wrong', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .get(`/api/v1/accounts/${wrongAcctNo}/transactions`)
         .set({ Authorization: `Bearer ${staffToken}` });
       expect(res).to.have.status(403);
@@ -115,7 +119,8 @@ describe('ACCOUNT TEST', () => {
     });
 
     it('it should return 403 if unauthorized', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .get(`/api/v1/accounts/${clientAcct}/transactions`)
         .set({ Authorization: 'Bearer wrong token' });
       expect(res).to.have.status(403);
@@ -125,7 +130,8 @@ describe('ACCOUNT TEST', () => {
 
   describe('TEST DELETE ACCOUNT', () => {
     it('it should return 403 if account number is wrong', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .delete(`/api/v1/accounts/${wrongAcctNo}`)
         .set({ Authorization: `Bearer ${staffToken}` });
       expect(res).to.have.status(403);
@@ -133,7 +139,8 @@ describe('ACCOUNT TEST', () => {
     });
 
     it('it should return 403 if unauthorized', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .delete(`/api/v1/accounts/${clientAcct}`)
         .set({ Authorization: 'Bearer wrong token' });
       expect(res).to.have.status(403);
@@ -141,14 +148,37 @@ describe('ACCOUNT TEST', () => {
     });
   });
 
-
   describe('TEST GET ALL ACCOUNTS', () => {
     it('it should return 403 if unauthorized', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .get('/api/v1/accounts')
         .set({ Authorization: 'Bearer wrong token' });
       expect(res).to.have.status(403);
       expect(res.body).to.have.property('error');
+    });
+  });
+
+  describe('TEST GET ALL ACCOUNTS', () => {
+    before(async () => {
+      const response = await chai
+        .request(app)
+        .post('/api/v1/auth/signin')
+        .send({ email: clientField.email, password: clientField.password });
+      clientToken = response.body.data.token;
+    });
+
+    it('Should return all accounts owned by a user', async () => {
+      try {
+        const res = await chai
+          .request(app)
+          .get('/api/v1/accounts')
+          .set({ Authorization: `Bearer ${clientToken}` });
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('data');
+      } catch (err) {
+        throw new Error(err.message);
+      }
     });
   });
 });

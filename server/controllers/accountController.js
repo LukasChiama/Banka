@@ -1,5 +1,14 @@
 import Account from '../models/accountModel';
 
+const {
+  userGetAllAccounts,
+  getAllAccounts,
+  getAccount,
+  active,
+  dormant,
+  deleteAccount,
+  accountTransactionHistory,
+} = Account;
 export default class AccountController {
   static async createAccount(req, res) {
     const account = new Account(req.body);
@@ -21,14 +30,13 @@ export default class AccountController {
         email: owneremail,
         type,
         openingBalance: parseFloat(balance.toFixed(1)),
-
       },
     });
   }
 
   static async changeStatus(req, res) {
     const { accountnumber } = req.params;
-    const accountExists = await Account.getAccount(accountnumber);
+    const accountExists = await getAccount(accountnumber);
     if (!accountExists) {
       return res.status(404).json({
         status: 404,
@@ -66,7 +74,7 @@ export default class AccountController {
         error: 'Account does not exist.',
       });
     }
-    await Account.deleteAccount(accountnumber);
+    await deleteAccount(accountnumber);
     return res.status(200).json({
       status: 200,
       message: 'Account successfuly deleted',
@@ -76,7 +84,7 @@ export default class AccountController {
   static async accountTransactionHistory(req, res) {
     const { accountnumber } = req.params;
 
-    const result = await Account.accountTransactionHistory(accountnumber);
+    const result = await accountTransactionHistory(accountnumber);
     if (!result.length) {
       return res.status(404).json({
         status: 404,
@@ -88,7 +96,13 @@ export default class AccountController {
         id, createdon, type, amount, oldbalance, newbalance,
       } = rest;
       return {
-        id, createdon, type, accountnumber, amount, oldbalance, newbalance,
+        id,
+        createdon,
+        type,
+        accountnumber,
+        amount,
+        oldbalance,
+        newbalance,
       };
     });
     return res.status(200).json({
@@ -102,7 +116,7 @@ export default class AccountController {
   static async getAccount(req, res) {
     const { accountnumber } = req.params;
 
-    const result = await Account.getAccount(Number(accountnumber));
+    const result = await getAccount(Number(accountnumber));
     if (!result) {
       return res.status(404).json({
         status: 404,
@@ -127,29 +141,31 @@ export default class AccountController {
 
   static async getAllAccounts(req, res) {
     let result;
+    // The user information already exists on the request object
+    // so, get the id and return all accounts with that owner id
+    const { id, type } = req.user;
     const { status } = req.query;
+    if (type === 'client') {
+      const usersAccounts = await userGetAllAccounts(id);
+      return res.status(200).json({
+        status: 200,
+        data: usersAccounts,
+      });
+    }
     if (status === 'dormant') {
-      result = await Account.dormant();
+      result = await dormant();
     } else if (status === 'active') {
-      result = await Account.active();
-    } else result = await Account.getAllAccounts();
+      result = await active();
+    } else result = await getAllAccounts();
     if (!result.length) {
       return res.status(404).json({
         status: 404,
         error: 'No account found.',
       });
     }
-    const results = result.map((rest) => {
-      const {
-        createdon, accountnumber, owneremail, type, status, balance,
-      } = rest;
-      return {
-        createdon, accountnumber, owneremail, type, status, balance,
-      };
-    });
     return res.status(200).json({
       status: 200,
-      data: results,
+      data: result,
     });
   }
 }

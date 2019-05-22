@@ -18,8 +18,13 @@ export default class Account {
       owner, type, status, balance, owneremail)
       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
     const values = [
-      generateAcctNo(), this.createdon, this.owner,
-      this.type, this.status, this.balance, this.owneremail,
+      generateAcctNo(),
+      this.createdon,
+      this.owner,
+      this.type,
+      this.status,
+      this.balance,
+      this.owneremail,
     ];
     const { rows } = await pool.query(queryString, values);
     return rows[0];
@@ -67,8 +72,19 @@ export default class Account {
     }
   }
 
+  static async userGetAllAccounts(owner) {
+    const queryString = 'SELECT * FROM accounts WHERE owner = $1';
+    const values = [owner];
+    try {
+      const { rows } = await pool.query(queryString, values);
+      return rows;
+    } catch (err) {
+      return err.message;
+    }
+  }
+
   static async dormant() {
-    const queryString = 'SELECT * FROM accounts WHERE status = \'dormant\'';
+    const queryString = "SELECT * FROM accounts WHERE status = 'dormant'";
     try {
       const { rows } = await pool.query(queryString);
       return rows;
@@ -78,7 +94,7 @@ export default class Account {
   }
 
   static async active() {
-    const queryString = 'SELECT * FROM accounts WHERE status = \'active\'';
+    const queryString = "SELECT * FROM accounts WHERE status = 'active'";
     try {
       const { rows } = await pool.query(queryString);
       return rows;
