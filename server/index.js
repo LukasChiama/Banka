@@ -5,12 +5,20 @@ import dotenv from 'dotenv';
 import router from './routes';
 
 dotenv.config();
+const { log } = console;
 const app = express();
 const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', router);
+
+// Handle errors
+app.use((err, req, res, next) => {
+  log(err.stack);
+  res.status(500).json({ status: 500, error: "Oops! Something's not right!" });
+  next();
+});
 
 router.use('/*', (req, res) => {
   res.status(404).json({
@@ -20,7 +28,7 @@ router.use('/*', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Sever running on port ${port}`);
+  log(`Sever running on port ${port}`);
 });
 
 export default app;
