@@ -33,12 +33,12 @@ export const requireAuth = async (req, res, next) => {
 export const adminAuth = (req, res, next) => {
   const { isadmin } = req.user;
   if (isadmin !== true) {
-    res.status(403).json({
+    return res.status(403).json({
       status: 403,
       error: 'Unauthorized! Accessible to admin only',
     });
   }
-  next();
+  return next();
 };
 
 export const staffAuth = (req, res, next) => {
