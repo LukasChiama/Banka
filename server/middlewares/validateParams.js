@@ -6,7 +6,7 @@ export default class paramsValidate {
     const acct = req.params;
 
     const acctProperties = {
-      accountnumber: 'numeric|digits:10',
+      accountnumber: 'numeric|digits:9',
     };
 
     const validator = new Validator(acct,

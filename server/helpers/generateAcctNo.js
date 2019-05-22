@@ -1,3 +1,3 @@
-const generateAcctNo = () => Math.floor(Math.random() * 10000000000);
+const generateAcctNo = () => Math.floor(Math.random() * 1000000000).toString();
 
 export default generateAcctNo;
