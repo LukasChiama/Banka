@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import accountController from '../controllers/accountController';
-import { requireAuth, staffAuth } from '../middlewares/authentication';
+import { requireAuth, staffAuth, clientAuth } from '../middlewares/authentication';
 import paramsValidate from '../middlewares/validateParams';
 import accountValidate from '../middlewares/validateAccount';
 
@@ -13,6 +13,7 @@ const {
 accountRouter.post(
   '/',
   requireAuth,
+  clientAuth,
   accountValidate.createAccount,
   createAccount,
 );
