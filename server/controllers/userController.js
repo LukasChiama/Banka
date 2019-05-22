@@ -9,7 +9,6 @@ export default class UsersController {
     user.password = hashPassword(user.password);
 
     const userExists = await User.getUserByEmail(user.email);
-    console.log(userExists);
     if (userExists) {
       return res.status(409).json({
         status: 409,

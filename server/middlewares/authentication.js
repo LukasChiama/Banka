@@ -51,3 +51,14 @@ export const staffAuth = (req, res, next) => {
   }
   next();
 };
+
+export const clientAuth = (req, res, next) => {
+  const { type } = req.user;
+  if (type !== 'client') {
+    return res.status(403).json({
+      status: 403,
+      error: 'Unauthorized! Staff and admin not allowed',
+    });
+  }
+  return next();
+};
