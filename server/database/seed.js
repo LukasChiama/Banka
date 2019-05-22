@@ -1,8 +1,6 @@
 import { hashPassword } from '../helpers/bcrypt';
 import pool from './index';
 
-console.log('seeding database');
-
 (async () => {
   const password = 'adepassword';
   const hashedPassword = hashPassword(password);
@@ -11,8 +9,6 @@ console.log('seeding database');
   try {
     result = await pool.query(`INSERT INTO users (email, firstname, lastname, password, type, isadmin)
       VALUES ($1, $2, $3, $4, $5, $6)`, params);
-
-    console.log('seed database');
 
     return result;
   } catch (error) {

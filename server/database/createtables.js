@@ -1,7 +1,4 @@
 import pool from './index';
-
-console.log('Creating tables...');
-
 (async () => {
   try {
     await pool.query(`CREATE TABLE IF NOT EXISTS users(
@@ -36,7 +33,6 @@ console.log('Creating tables...');
         newbalance FLOAT NOT NULL,
         FOREIGN KEY (cashier) REFERENCES users (id) ON DELETE CASCADE)`);
   } catch (error) {
-    console.log(error);
+    return error;
   }
-  console.log('Created all tables.');
 })();

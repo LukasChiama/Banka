@@ -1,45 +1,59 @@
 import { Router } from 'express';
 import accountController from '../controllers/accountController';
-import { requireAuth, staffAuth } from '../middlewares/authentication';
+import { requireAuth, staffAuth, clientAuth } from '../middlewares/authentication';
 import paramsValidate from '../middlewares/validateParams';
 import accountValidate from '../middlewares/validateAccount';
 
 const accountRouter = new Router();
 const {
-  createAccount, changeStatus, deleteAccount,
-  accountTransactionHistory, getAccount, getAllAccounts,
+  createAccount,
+  changeStatus,
+  deleteAccount,
+  accountTransactionHistory,
+  getAccount,
+  getAllAccounts,
 } = accountController;
 
 accountRouter.post(
   '/',
   requireAuth,
+  clientAuth,
   accountValidate.createAccount,
   createAccount,
 );
 
-accountRouter.patch('/:accountnumber',
+accountRouter.patch(
+  '/:accountnumber',
   requireAuth,
   staffAuth,
   paramsValidate.acctNo,
   accountValidate.changeStatus,
-  changeStatus);
+  changeStatus,
+);
 
-accountRouter.delete('/:accountnumber',
+accountRouter.delete(
+  '/:accountnumber',
   requireAuth,
   staffAuth,
   paramsValidate.acctNo,
-  deleteAccount);
+  deleteAccount,
+);
 
-accountRouter.get('/:accountnumber/transactions',
+accountRouter.get(
+  '/:accountnumber/transactions',
   requireAuth,
   paramsValidate.acctNo,
-  accountTransactionHistory);
+  accountTransactionHistory,
+);
 
-accountRouter.get('/:accountnumber',
-  requireAuth, staffAuth,
+accountRouter.get(
+  '/:accountnumber',
+  requireAuth,
+  staffAuth,
   paramsValidate.acctNo,
-  getAccount);
+  getAccount,
+);
 
-accountRouter.get('/', requireAuth, staffAuth, getAllAccounts);
+accountRouter.get('/', requireAuth, getAllAccounts);
 
 export default accountRouter;

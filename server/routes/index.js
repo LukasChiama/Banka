@@ -6,9 +6,7 @@ import userRouter from './userRoute';
 const router = new Router();
 
 router.get('/api/v1', (req, res) => {
-  res.status(200).json(
-    { message: 'Welcome to Banka' },
-  );
+  res.status(200).json({ message: 'Welcome to Banka' });
 });
 
 router.use('/api/v1/accounts', accountRouter);
