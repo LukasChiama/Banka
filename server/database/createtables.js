@@ -1,5 +1,4 @@
 import pool from './index';
-
 (async () => {
   try {
     await pool.query(`CREATE TABLE IF NOT EXISTS users(

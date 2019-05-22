@@ -29,7 +29,7 @@ export default class TransactionController {
     transaction.accountnumber = accountnumber;
     transaction.cashier = req.user.id;
     transaction.oldbalance = balance;
-    transaction.newbalance = balance - transaction.amount;
+    transaction.newbalance = balance - Number(transaction.amount);
 
     const newTransaction = await transaction.debit();
     const {
@@ -69,8 +69,8 @@ export default class TransactionController {
     transaction.accountnumber = accountnumber;
     transaction.cashier = req.user.id;
     transaction.oldbalance = balance;
-    transaction.newbalance = balance + transaction.amount;
-    const newTransaction = await transaction.credit(balance);
+    transaction.newbalance = balance + Number(transaction.amount);
+    const newTransaction = await transaction.credit();
     const {
       id, amount, cashier, type, newbalance,
     } = newTransaction;
