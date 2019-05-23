@@ -196,4 +196,39 @@ export default class UsersController {
       accounts: results,
     });
   }
+
+  static async getAllUsers(req, res) {
+    const users = await User.getAllUsers();
+    const { type } = req.user;
+    if (type === 'staff') {
+      if (!users.length) {
+        return res.status(404).json({
+          status: 404,
+          error: 'No accounts found',
+        });
+      }
+      const results = users.map((result) => {
+        const {
+          id,
+          firstname,
+          lastname,
+          email,
+        } = result;
+        return {
+          id,
+          firstname,
+          lastname,
+          email,
+        };
+      });
+      return res.status(200).json({
+        status: 200,
+        data: results,
+      });
+    }
+    return res.status(401).json({
+      status: 401,
+      error: 'You are not authorized to view all users',
+    });
+  }
 }

@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npm run migrations && nyc mocha --exit --require @babel/register --require @babel/polyfill ./server/tests/**/*.js || true",
+    "test": "npm run migrations && nyc mocha --timeout 10000 --exit --require @babel/register --require @babel/polyfill ./server/tests/**/*.js || true",
     "start": "npm run build && node build/index.js",
     "startDev": "nodemon --exec babel-node server/index.js",
     "build": "npm run clean && babel server --out-dir build",

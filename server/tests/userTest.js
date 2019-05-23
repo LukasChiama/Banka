@@ -21,6 +21,7 @@ import {
   emptyStaff,
   login,
   staffField4,
+  staffField2,
   adminField4,
   adminField5,
 } from './testData';
@@ -29,6 +30,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 let adminToken;
+let staffToken;
 
 describe('USER TEST DATA', () => {
   before(async () => {
@@ -58,7 +60,7 @@ describe('USER TEST DATA', () => {
       .request(app)
       .post('/api/v1/staff')
       .set({ Authorization: `Bearer ${adminToken}` })
-      .send(staffField3);
+      .send(staffField2);
 
     staffToken = staffResponse.body.data.token;
   });
@@ -153,6 +155,17 @@ describe('USER TEST', () => {
         .send(emptyStaff);
       expect(res).to.have.status(403);
       expect(res).to.have.property('error');
+    });
+  });
+
+  describe('TEST GET ALL USERS', () => {
+    it('it should return 401 if you are not authorized', async () => {
+      const res = await chai
+        .request(app)
+        .get('/api/v1/users')
+        .set({ Authorization: 'Bearer wrong token' });
+      expect(res).to.have.status(403);
+      expect(res.body).to.have.property('error');
     });
   });
 });
