@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
@@ -11,7 +12,13 @@ import {
   transaction,
   emptytransaction,
   adminField2,
+  clientTransfer,
+  newAccount,
+  newTrans,
 } from './testData';
+import Jwt from '../helpers/auth';
+import Account from '../models/accountModel';
+import Transaction from '../models/transactionModel';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -23,6 +30,8 @@ let staffToken;
 let adminToken;
 let clientAcct;
 
+const { log } = console;
+
 describe('TRANSACTION TEST DATA', () => {
   before(async () => {
     const respons = await chai
@@ -30,7 +39,11 @@ describe('TRANSACTION TEST DATA', () => {
       .post('/api/v1/auth/signup')
       .send(clientField2);
 
+    log(respons, 'signup res');
+
     clientToken = respons.body.data.token;
+
+    log(clientToken, 'client token');
 
     const userRespons = await chai
       .request(app)
@@ -265,10 +278,99 @@ describe('TRANSACTIONS', () => {
         .post(`/api/v1/transactions/${userAccountNumber}/debit`)
         .send({ amount: 10200 })
         .set({ Authorization: `Bearer ${staffToken}` });
-      expect(res).to.have.status(422);
+      expect(res).to.have.status(400);
       expect(res.body).to.have.property('error');
     } catch (err) {
       throw new Error(err.message);
     }
+  });
+});
+describe('TEST TRANSFERS', () => {
+  let token;
+  let accNumber1;
+  let accNumber2;
+
+  before(async () => {
+    token = await Jwt.generateToken(clientTransfer);
+    const account = new Account(newAccount);
+    const account1 = await account.createAccount();
+    const account2 = await account.createAccount();
+    accNumber1 = account1.accountnumber;
+    accNumber2 = account2.accountnumber;
+    const trans = new Transaction({
+      ...newTrans,
+      accountnumber: accNumber1,
+    });
+    await trans.credit(trans);
+  });
+
+  it('should transfer funds between client accounts', async () => {
+    const response = await chai
+      .request(app)
+      .post('/api/v1/transactions/transfer')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        sender: accNumber1,
+        receiver: accNumber2,
+        amount: 1000,
+      });
+    expect(response).to.have.status(200);
+    expect(response.body.message).to.equal('Transfer of N1000 successful');
+  });
+
+  it('should fail for a wrong route', async () => {
+    const response = await chai
+      .request(app)
+      .post('/api/v1/transactions/transfers')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        sender: accNumber1,
+        receiver: accNumber2,
+        amount: 1000,
+      });
+    expect(response).to.have.status(404);
+    expect(response.body.message).to.equal('Endpoint not found! Go to the homepage using: /api/v1');
+  });
+
+  it('should return an error for wrong account number', async () => {
+    const response = await chai
+      .request(app)
+      .post('/api/v1/transactions/transfer')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        sender: 999888,
+        receiver: accNumber2,
+        amount: 1000,
+      });
+    expect(response).to.have.status(404);
+    expect(response.body.error).to.equal('Account does not exist.');
+  });
+
+  it('should return an error when debit amount is greater than balance', async () => {
+    const response = await chai
+      .request(app)
+      .post('/api/v1/transactions/transfer')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        sender: accNumber1,
+        receiver: accNumber2,
+        amount: 1000000,
+      });
+    expect(response).to.have.status(400);
+    expect(response.body.error).to.equal('Insufficient funds');
+  });
+
+  it('should return an error when no token is provided', async () => {
+    const response = await chai
+      .request(app)
+      .post('/api/v1/transactions/transfer')
+      .set('Authorization', 'Bearer')
+      .send({
+        sender: accNumber1,
+        receiver: accNumber2,
+        amount: 10000,
+      });
+    expect(response).to.have.status(401);
+    expect(response.body.error).to.equal('Access denied! Invalid token.');
   });
 });
