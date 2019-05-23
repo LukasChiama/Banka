@@ -16,6 +16,7 @@ export const requireAuth = async (req, res, next) => {
       status: 401,
       error: 'Access denied! Invalid token.',
     });
+    return;
   }
 
   try {

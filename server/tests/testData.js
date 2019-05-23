@@ -190,6 +190,29 @@ const wrongTransactionAmount = {
   amount: '20K',
 };
 
+const clientTransfer = {
+  id: 2,
+  email: 'edefade@gmail.com',
+  type: 'client',
+  isadmin: false,
+  firstname: 'Ede',
+  lastname: 'Fade',
+};
+
+const newAccount = {
+  owner: 2,
+  owneremail: 'edefade@gmail.com',
+  type: 'savings',
+  balance: 0,
+};
+
+const newTrans = {
+  amount: 10000,
+  cashier: 2,
+  oldbalance: 0,
+  newbalance: 10000,
+};
+
 // testAdmin
 const testAdmin = {
   firstname: 'Adeq',
@@ -247,4 +270,7 @@ export {
   adminField3,
   adminField4,
   adminField5,
+  clientTransfer,
+  newAccount,
+  newTrans,
 };

@@ -32,6 +32,14 @@ chai.use(chaiHttp);
 let adminToken;
 let staffToken;
 
+describe('GET BASE ROUTE', () => {
+  it('should get the /api/v1 route', async () => {
+    const response = await chai.request(app).get('/api/v1');
+    expect(response).to.have.status(200);
+    expect(response.body.message).to.equal('Welcome to Banka');
+  });
+});
+
 describe('USER TEST DATA', () => {
   before(async () => {
     const response = await chai
@@ -69,7 +77,8 @@ describe('USER TEST DATA', () => {
 describe('USER TEST', () => {
   describe('USER SIGNUP', () => {
     it('it should return 400 if there are missing fields', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/auth/signup')
         .send(missingClient);
       expect(res).to.have.status(400);
@@ -77,7 +86,8 @@ describe('USER TEST', () => {
     });
 
     it('it should return 400 if the fields are empty', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/auth/signup')
         .send(emptyClient);
       expect(res).to.have.status(400);
@@ -87,7 +97,8 @@ describe('USER TEST', () => {
 
   describe('USER LOGIN', () => {
     it('it should return 400 if the login fields are empty', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/auth/signin')
         .send(emptyLogin);
       expect(res).to.have.status(400);
@@ -95,7 +106,8 @@ describe('USER TEST', () => {
     });
 
     it('it should return 400 if there is a missing field in login', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/auth/signin')
         .send(missingLogin);
       expect(res).to.have.status(400);
@@ -103,7 +115,8 @@ describe('USER TEST', () => {
     });
 
     it('it should return 400 if there inputs in fields are invalid', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/auth/signin')
         .send(wrongLogin);
       expect(res).to.have.status(400);
@@ -113,7 +126,8 @@ describe('USER TEST', () => {
 
   describe('ADMIN CAN CREATE STAFF/ADMIN', () => {
     it('it should return 403 if unauthorized', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/staff')
         .set({ Authorization: 'Bearer wrongtoken' })
         .send(adminField4);
@@ -122,7 +136,8 @@ describe('USER TEST', () => {
     });
 
     it('it should return 403 if there is a missing field in the create staff form', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/staff')
         .set({ Authorization: `Bearer ${adminToken}` })
         .send(missingStaff);
@@ -131,7 +146,8 @@ describe('USER TEST', () => {
     });
 
     it('it should return 403 if the create admin fields are empty', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/staff')
         .set({ Authorization: `Bearer ${adminToken}` })
         .send(emptyAdmin);
@@ -140,7 +156,8 @@ describe('USER TEST', () => {
     });
 
     it('it should return 403 if there is a missing field in the create admin form', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/staff')
         .set({ Authorization: `Bearer ${adminToken}` })
         .send(missingAdmin);
@@ -149,7 +166,8 @@ describe('USER TEST', () => {
     });
 
     it('it should return 403 if the create staff fields are empty', async () => {
-      const res = await chai.request(app)
+      const res = await chai
+        .request(app)
         .post('/api/v1/staff')
         .set({ Authorization: `Bearer ${adminToken}` })
         .send(emptyStaff);

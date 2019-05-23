@@ -36,9 +36,9 @@ export default class TransactionController {
     }
 
     if (balance < transaction.amount) {
-      return res.status(422).json({
-        status: 422,
-        error: 'Insufficient fund',
+      return res.status(400).json({
+        status: 400,
+        error: 'Insufficient funds',
       });
     }
 
@@ -58,6 +58,8 @@ export default class TransactionController {
       if (err) return err;
       return info;
     });
+    if (req.body.sender) return null;
+
     return res.status(201).json({
       status: 201,
       data: {
@@ -106,6 +108,8 @@ export default class TransactionController {
       if (err) return err;
       return info;
     });
+    if (req.body.receiver) return null;
+
     return res.status(201).json({
       status: 201,
       data: {
@@ -117,6 +121,17 @@ export default class TransactionController {
         accountBalance: newbalance,
       },
     });
+  }
+
+  static async transfer(req, res) {
+    const { receiver, sender, amount } = req.body;
+    req.params.accountnumber = sender;
+    const debit = await TransactionController.debit(req, res);
+    if (debit) return null;
+    req.params.accountnumber = receiver;
+    const credit = await TransactionController.credit(req, res);
+    if (credit) return null;
+    return res.status(200).json({ message: `Transfer of N${amount} successful` });
   }
 
   static async getTransaction(req, res) {
