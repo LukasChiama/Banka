@@ -88,4 +88,14 @@ export default class User {
       return error.message;
     }
   }
+
+  static async getAllUsers() {
+    const queryString = 'SELECT * FROM users';
+    try {
+      const { rows } = await pool.query(queryString);
+      return rows;
+    } catch (error) {
+      return error.message;
+    }
+  }
 }

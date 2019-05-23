@@ -57,6 +57,7 @@ const staffField3 = {
   lastname: 'Berry',
   isadmin: false,
 };
+
 const staffField4 = {
   email: 'testStaff4@gmail.com',
   password: 'asdfghjkl',
