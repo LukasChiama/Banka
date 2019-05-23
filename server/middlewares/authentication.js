@@ -42,8 +42,13 @@ export const adminAuth = (req, res, next) => {
 };
 
 export const staffAuth = (req, res, next) => {
+<<<<<<< HEAD
   const { type, isadmin } = req.user;
   if (type !== 'staff' || isadmin === true) {
+=======
+  const { type } = req.user;
+  if (type !== 'staff') {
+>>>>>>> feature(transactions):email notifications
     return res.status(403).json({
       status: 403,
       error: 'Unauthorized! Accessible to staff only',

@@ -1,17 +1,33 @@
+import nodemailer from 'nodemailer';
 import Transaction from '../models/transactionModel';
 import Account from '../models/accountModel';
+import User from '../models/userModel';
+import Mail from '../utils/Mail';
 
+const { getUserByEmail } = User;
+const { getAccount } = Account;
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.USER_EMAIL,
+    pass: process.env.USER_PASSWORD,
+  },
+});
 export default class TransactionController {
   static async debit(req, res) {
     const { accountnumber } = req.params;
-    const accountExists = await Account.getAccount(accountnumber);
+    const accountExists = await getAccount(accountnumber);
     if (!accountExists) {
       return res.status(404).json({
         status: 404,
         error: 'Account does not exist.',
       });
     }
-    const { balance } = accountExists;
+    const { balance, owneremail } = accountExists;
+    // Get the owner of the account to send an email notification
+    const accountOwner = await getUserByEmail(owneremail);
+    delete accountOwner.password; // remove sensitive information
     let transaction;
     try {
       transaction = new Transaction(req.body);
@@ -36,6 +52,12 @@ export default class TransactionController {
       id, amount, cashier, type, newbalance,
     } = newTransaction;
 
+    // Get email template and send email
+    const emailNotification = new Mail(newTransaction, accountOwner, accountnumber, newbalance);
+    transporter.sendMail(emailNotification.getMailOptions(), (err, info) => {
+      if (err) return err;
+      return info;
+    });
     return res.status(201).json({
       status: 201,
       data: {
@@ -51,14 +73,17 @@ export default class TransactionController {
 
   static async credit(req, res) {
     const { accountnumber } = req.params;
-    const accountExists = await Account.getAccount(accountnumber);
+    const accountExists = await getAccount(accountnumber);
     if (!accountExists) {
       return res.status(404).json({
         status: 404,
         error: 'Account does not exist.',
       });
     }
-    const { balance } = accountExists;
+    const { balance, owneremail } = accountExists;
+    // Get the owner of the account to send an email notification
+    const accountOwner = await getUserByEmail(owneremail);
+    delete accountOwner.password; // remove sensitive information
     let transaction;
     try {
       transaction = new Transaction(req.body);
@@ -75,6 +100,12 @@ export default class TransactionController {
       id, amount, cashier, type, newbalance,
     } = newTransaction;
 
+    // Get email template and send email
+    const emailNotification = new Mail(newTransaction, accountOwner, accountnumber, newbalance);
+    transporter.sendMail(emailNotification.getMailOptions(), (err, info) => {
+      if (err) return err;
+      return info;
+    });
     return res.status(201).json({
       status: 201,
       data: {

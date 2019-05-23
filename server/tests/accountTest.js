@@ -163,9 +163,8 @@ describe('ACCOUNT TEST', () => {
     before(async () => {
       const response = await chai
         .request(app)
-        .post('/api/v1/auth/signup')
-        .send(clientField);
-
+        .post('/api/v1/auth/signin')
+        .send({ email: 'edefade@gmail.com', password: 'edepassword' });
       clientToken = response.body.data.token;
     });
 

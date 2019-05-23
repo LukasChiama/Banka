@@ -7,12 +7,12 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "nyc mocha --exit --require @babel/register --require @babel/polyfill ./server/tests/**/*.js || true",
+    "test": "npm run migrations && nyc mocha --exit --require @babel/register --require @babel/polyfill ./server/tests/**/*.js || true",
     "start": "npm run build && node build/index.js",
     "startDev": "nodemon --exec babel-node server/index.js",
     "build": "npm run clean && babel server --out-dir build",
     "clean": "rm -rf build",
-    "migrations": "babel-node server/database/droptables && babel-node server/database/createtables",
+    "migrations": "babel-node server/database/droptables && babel-node server/database/createtables && npm run seed",
     "seed": "babel-node server/database/seed",
     "dbtest": "npm run migrations && npm run seed"
   },
@@ -32,6 +32,7 @@
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.1.1",
     "pg": "^7.10.0",
     "validatorjs": "^3.15.1"
   },
