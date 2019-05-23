@@ -30,8 +30,6 @@ let staffToken;
 let adminToken;
 let clientAcct;
 
-const { log } = console;
-
 describe('TRANSACTION TEST DATA', () => {
   before(async () => {
     const respons = await chai
@@ -39,11 +37,7 @@ describe('TRANSACTION TEST DATA', () => {
       .post('/api/v1/auth/signup')
       .send(clientField2);
 
-    log(respons, 'signup res');
-
     clientToken = respons.body.data.token;
-
-    log(clientToken, 'client token');
 
     const userRespons = await chai
       .request(app)
@@ -304,20 +298,6 @@ describe('TEST TRANSFERS', () => {
     await trans.credit(trans);
   });
 
-  it('should transfer funds between client accounts', async () => {
-    const response = await chai
-      .request(app)
-      .post('/api/v1/transactions/transfer')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        sender: accNumber1,
-        receiver: accNumber2,
-        amount: 1000,
-      });
-    expect(response).to.have.status(200);
-    expect(response.body.message).to.equal('Transfer of N1000 successful');
-  });
-
   it('should fail for a wrong route', async () => {
     const response = await chai
       .request(app)
@@ -372,5 +352,19 @@ describe('TEST TRANSFERS', () => {
       });
     expect(response).to.have.status(401);
     expect(response.body.error).to.equal('Access denied! Invalid token.');
+  });
+
+  it('should transfer funds between client accounts', async () => {
+    const response = await chai
+      .request(app)
+      .post('/api/v1/transactions/transfer')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        sender: accNumber1,
+        receiver: accNumber2,
+        amount: 1000,
+      });
+    expect(response).to.have.status(200);
+    expect(response.body.message).to.equal('Transfer of N1000 successful');
   });
 });
