@@ -42,14 +42,14 @@ export const adminAuth = (req, res, next) => {
 };
 
 export const staffAuth = (req, res, next) => {
-  const { type } = req.user;
-  if (type !== 'staff') {
-    res.status(403).json({
+  const { type, isadmin } = req.user;
+  if (type !== 'staff' || isadmin === true) {
+    return res.status(403).json({
       status: 403,
       error: 'Unauthorized! Accessible to staff only',
     });
   }
-  next();
+  return next();
 };
 
 export const clientAuth = (req, res, next) => {
