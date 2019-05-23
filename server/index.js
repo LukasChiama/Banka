@@ -8,7 +8,7 @@ import './database/index';
 dotenv.config();
 const { log } = console;
 const app = express();
-const port = process.env.PORT || 8080;
+const PORT = process.env || 8080;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,8 +28,8 @@ router.use('/*', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  log(`Sever running on port ${port}`);
+app.listen(PORT, () => {
+  log(`Sever running on port ${PORT}`);
 });
 
 export default app;
