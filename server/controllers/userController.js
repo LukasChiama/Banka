@@ -17,22 +17,36 @@ export default class UsersController {
     }
     let newUser;
     try {
-      newUser = await user.signUp();
+      if (req.url.includes('admin')) {
+        newUser = await user.createAdmin();
+      } else if (req.url.includes('staff')) {
+        newUser = await user.createStaff();
+      } else {
+        newUser = await user.signUp();
+      }
     } catch (error) {
       return error.message;
     }
 
     const {
-      id, firstname, lastname, email,
-      type, isadmin,
+      id, firstname, lastname, email, type, isadmin,
     } = newUser;
 
     const token = await Jwt.generateToken({
-      id, email, type, isadmin, firstname, lastname,
+      id,
+      email,
+      type,
+      isadmin,
+      firstname,
+      lastname,
     });
 
     const response = {
-      token, id, firstname, lastname, email,
+      token,
+      id,
+      firstname,
+      lastname,
+      email,
     };
     return res.status(201).json({
       status: 201,
@@ -40,82 +54,6 @@ export default class UsersController {
     });
   }
 
-  static async createStaff(req, res) {
-    const user = new User(req.body);
-
-    user.password = hashPassword(user.password);
-
-    const userExists = await User.getUserByEmail(user.email);
-    if (userExists) {
-      return res.status(409).json({
-        status: 409,
-        error: 'This email address is already taken.',
-      });
-    }
-
-    let newUser;
-    try {
-      newUser = await user.createStaff();
-    } catch (error) {
-      return error.message;
-    }
-
-    const {
-      id, firstname, lastname, email,
-      type, isadmin,
-    } = newUser;
-
-    const token = await Jwt.generateToken({
-      id, email, type, isadmin, firstname, lastname,
-    });
-
-    const response = {
-      token, id, firstname, lastname, email,
-    };
-
-    return res.status(201).json({
-      status: 201,
-      data: response,
-    });
-  }
-
-  static async createAdmin(req, res) {
-    const user = new User(req.body);
-
-    user.password = hashPassword(user.password);
-
-    const userExists = await User.getUserByEmail(user.email);
-    if (userExists) {
-      return res.status(409).json({
-        status: 409,
-        error: 'This email address is already taken.',
-      });
-    }
-
-    let newUser;
-    try {
-      newUser = await user.createAdmin();
-    } catch (error) {
-      return error.message;
-    }
-    const {
-      id, firstname, lastname, email,
-      type, isadmin,
-    } = newUser;
-
-    const token = await Jwt.generateToken({
-      id, email, type, isadmin, firstname, lastname,
-    });
-
-    const response = {
-      token, id, firstname, lastname, email,
-    };
-
-    return res.status(201).json({
-      status: 201,
-      data: response,
-    });
-  }
 
   static async signin(req, res) {
     const { email, password } = req.body;
@@ -143,16 +81,24 @@ export default class UsersController {
     }
 
     const {
-      id, firstname, lastname,
-      type, isadmin,
+      id, firstname, lastname, type, isadmin,
     } = result;
 
     const token = await Jwt.generateToken({
-      id, email, type, isadmin, firstname, lastname,
+      id,
+      email,
+      type,
+      isadmin,
+      firstname,
+      lastname,
     });
 
     const response = {
-      token, id, firstname, lastname, email, type, isadmin,
+      token,
+      id,
+      firstname,
+      lastname,
+      email,
     };
 
     return res.status(200).json({
@@ -188,7 +134,11 @@ export default class UsersController {
         createdon, accountnumber, type, status, balance,
       } = rest;
       return {
-        createdon, accountnumber, type, status, balance,
+        createdon,
+        accountnumber,
+        type,
+        status,
+        balance,
       };
     });
     return res.status(200).json({
@@ -227,10 +177,7 @@ export default class UsersController {
       }
       const results = users.map((result) => {
         const {
-          id,
-          firstname,
-          lastname,
-          email,
+          id, firstname, lastname, email,
         } = result;
         return {
           id,
