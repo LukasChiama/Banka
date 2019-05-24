@@ -3,23 +3,17 @@
 const api = 'http://localhost:8080/api/v1/';
 
 // Alert message
-class Message {
-  constructor(message) {
-    this.message = message;
-  }
-
-  alertMessage(status) {
-    const displayMessage = document.querySelector('#message');
-    displayMessage.setAttribute('style', 'display: block;');
-    displayMessage.innerHTML = this.message;
-    displayMessage.removeAttribute('class');
-    displayMessage.classList.add(`${status}`);
-    displayMessage.classList.add('fade-out-delay');
-    setTimeout(() => {
-      displayMessage.setAttribute('style', 'display: none;');
-    }, 4000);
-  }
-}
+const alertMessage = (status, message) => {
+  const displayMessage = document.querySelector('#message');
+  displayMessage.setAttribute('style', 'display: block;');
+  displayMessage.innerHTML = message;
+  displayMessage.removeAttribute('class');
+  displayMessage.classList.add(`${status}`);
+  displayMessage.classList.add('fade-out-delay');
+  setTimeout(() => {
+    displayMessage.setAttribute('style', 'display: none;');
+  }, 4000);
+};
 
 // Handle sign up
 const registerBtn = document.querySelector('#register');
@@ -49,18 +43,13 @@ if (registerBtn) {
         if (res.data) {
           const user = JSON.stringify(res.data);
           sessionStorage.setItem('user', user);
-          const signedUp = new Message('Sign up successful');
           setTimeout(() => {
             location.assign('/dashboard.html');
           }, 2000);
-          return signedUp.alertMessage('success');
+          return alertMessage('success', 'Sign up successful');
         }
-        const signedUp = new Message(res.error);
-        return signedUp.alertMessage('error');
-      }).catch((err) => {
-        const signedUp = new Message(err);
-        return signedUp.alertMessage('error');
-      });
+        return alertMessage('error', res.error);
+      }).catch(err => alertMessage('error', err));
   });
 }
 
@@ -88,7 +77,6 @@ if (signinBtn) {
         if (res.data) {
           const user = JSON.stringify(res.data);
           sessionStorage.setItem('user', user);
-          const signedin = new Message('Sign In successful');
           if (res.data.type === 'client') {
             setTimeout(() => {
               location.assign('/dashboard.html');
@@ -102,13 +90,9 @@ if (signinBtn) {
               location.assign('/dashboard-admin.html');
             }, 2000);
           }
-          return signedin.alertMessage('success');
+          return alertMessage('success', 'Sign In successful');
         }
-        const signedin = new Message(res.error);
-        return signedin.alertMessage('error');
-      }).catch((err) => {
-        const signedin = new Message(err);
-        return signedin.alertMessage('error');
-      });
+        return alertMessage('error', res.error);
+      }).catch(err => alertMessage('error', err));
   });
 }
