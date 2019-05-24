@@ -57,6 +57,7 @@ const staffField3 = {
   lastname: 'Berry',
   isadmin: false,
 };
+
 const staffField4 = {
   email: 'testStaff4@gmail.com',
   password: 'asdfghjkl',
@@ -189,6 +190,29 @@ const wrongTransactionAmount = {
   amount: '20K',
 };
 
+const clientTransfer = {
+  id: 2,
+  email: 'edefade@gmail.com',
+  type: 'client',
+  isadmin: false,
+  firstname: 'Ede',
+  lastname: 'Fade',
+};
+
+const newAccount = {
+  owner: 2,
+  owneremail: 'edefade@gmail.com',
+  type: 'savings',
+  balance: 0,
+};
+
+const newTrans = {
+  amount: 10000,
+  cashier: 2,
+  oldbalance: 0,
+  newbalance: 10000,
+};
+
 // testAdmin
 const testAdmin = {
   firstname: 'Adeq',
@@ -212,10 +236,41 @@ const emptyTestAdmin = {
   isadmin: '',
 };
 export {
-  wrongAcctNo, wrongTransactionId, wrongAccountType, wrongLogin, wrongTransactionAmount,
-  clientField, adminField, staffField, missingAdmin, missingClient,
-  missingLogin, missingStaff, missingtestAdmin, emptyAccountType, emptyAdmin,
-  emptyClient, emptyLogin, emptyStaff, emptyTestAdmin, emptytransaction,
-  login, accountType, transaction, testAdmin, clientField2, adminField2, staffField2,
-  clientField3, clientField4, staffField3, staffField4, adminField3, adminField4, adminField5,
+  wrongAcctNo,
+  wrongTransactionId,
+  wrongAccountType,
+  wrongLogin,
+  wrongTransactionAmount,
+  clientField,
+  adminField,
+  staffField,
+  missingAdmin,
+  missingClient,
+  missingLogin,
+  missingStaff,
+  missingtestAdmin,
+  emptyAccountType,
+  emptyAdmin,
+  emptyClient,
+  emptyLogin,
+  emptyStaff,
+  emptyTestAdmin,
+  emptytransaction,
+  login,
+  accountType,
+  transaction,
+  testAdmin,
+  clientField2,
+  adminField2,
+  staffField2,
+  clientField3,
+  clientField4,
+  staffField3,
+  staffField4,
+  adminField3,
+  adminField4,
+  adminField5,
+  clientTransfer,
+  newAccount,
+  newTrans,
 };

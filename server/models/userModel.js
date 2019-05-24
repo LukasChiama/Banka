@@ -89,6 +89,7 @@ export default class User {
     }
   }
 
+
   static async getUserById(id) {
     const data = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
     return data.rowCount < 1 ? false : data.rows[0];
@@ -96,5 +97,16 @@ export default class User {
 
   static async changePassword(id, password) {
     await pool.query('UPDATE users SET password = $1 WHERE id = $2', [password, id]);
+  }
+
+  static async getAllUsers() {
+    const queryString = 'SELECT * FROM users';
+    try {
+      const { rows } = await pool.query(queryString);
+      return rows;
+    } catch (error) {
+      return error.message;
+    }
+
   }
 }

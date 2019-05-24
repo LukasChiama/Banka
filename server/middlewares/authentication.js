@@ -16,6 +16,7 @@ export const requireAuth = async (req, res, next) => {
       status: 401,
       error: 'Access denied! Invalid token.',
     });
+    return;
   }
 
   try {
@@ -44,12 +45,12 @@ export const adminAuth = (req, res, next) => {
 export const staffAuth = (req, res, next) => {
   const { type } = req.user;
   if (type !== 'staff') {
-    res.status(403).json({
+    return res.status(403).json({
       status: 403,
       error: 'Unauthorized! Accessible to staff only',
     });
   }
-  next();
+  return next();
 };
 
 export const clientAuth = (req, res, next) => {

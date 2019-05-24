@@ -1,17 +1,33 @@
+import nodemailer from 'nodemailer';
 import Transaction from '../models/transactionModel';
 import Account from '../models/accountModel';
+import User from '../models/userModel';
+import Mail from '../utils/Mail';
 
+const { getUserByEmail } = User;
+const { getAccount } = Account;
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.USER_EMAIL,
+    pass: process.env.USER_PASSWORD,
+  },
+});
 export default class TransactionController {
   static async debit(req, res) {
     const { accountnumber } = req.params;
-    const accountExists = await Account.getAccount(accountnumber);
+    const accountExists = await getAccount(accountnumber);
     if (!accountExists) {
       return res.status(404).json({
         status: 404,
         error: 'Account does not exist.',
       });
     }
-    const { balance } = accountExists;
+    const { balance, owneremail } = accountExists;
+    // Get the owner of the account to send an email notification
+    const accountOwner = await getUserByEmail(owneremail);
+    delete accountOwner.password; // remove sensitive information
     let transaction;
     try {
       transaction = new Transaction(req.body);
@@ -20,9 +36,9 @@ export default class TransactionController {
     }
 
     if (balance < transaction.amount) {
-      return res.status(422).json({
-        status: 422,
-        error: 'Insufficient fund',
+      return res.status(400).json({
+        status: 400,
+        error: 'Insufficient funds',
       });
     }
 
@@ -35,6 +51,14 @@ export default class TransactionController {
     const {
       id, amount, cashier, type, newbalance,
     } = newTransaction;
+
+    // Get email template and send email
+    const emailNotification = new Mail(newTransaction, accountOwner, accountnumber, newbalance);
+    transporter.sendMail(emailNotification.getMailOptions(), (err, info) => {
+      if (err) return err;
+      return info;
+    });
+    if (req.body.sender) return null;
 
     return res.status(201).json({
       status: 201,
@@ -51,14 +75,17 @@ export default class TransactionController {
 
   static async credit(req, res) {
     const { accountnumber } = req.params;
-    const accountExists = await Account.getAccount(accountnumber);
+    const accountExists = await getAccount(accountnumber);
     if (!accountExists) {
       return res.status(404).json({
         status: 404,
         error: 'Account does not exist.',
       });
     }
-    const { balance } = accountExists;
+    const { balance, owneremail } = accountExists;
+    // Get the owner of the account to send an email notification
+    const accountOwner = await getUserByEmail(owneremail);
+    delete accountOwner.password; // remove sensitive information
     let transaction;
     try {
       transaction = new Transaction(req.body);
@@ -75,6 +102,14 @@ export default class TransactionController {
       id, amount, cashier, type, newbalance,
     } = newTransaction;
 
+    // Get email template and send email
+    const emailNotification = new Mail(newTransaction, accountOwner, accountnumber, newbalance);
+    transporter.sendMail(emailNotification.getMailOptions(), (err, info) => {
+      if (err) return err;
+      return info;
+    });
+    if (req.body.receiver) return null;
+
     return res.status(201).json({
       status: 201,
       data: {
@@ -86,6 +121,17 @@ export default class TransactionController {
         accountBalance: newbalance,
       },
     });
+  }
+
+  static async transfer(req, res) {
+    const { receiver, sender, amount } = req.body;
+    req.params.accountnumber = sender;
+    const debit = await TransactionController.debit(req, res);
+    if (debit) return null;
+    req.params.accountnumber = receiver;
+    const credit = await TransactionController.credit(req, res);
+    if (credit) return null;
+    return res.status(200).json({ message: `Transfer of N${amount} successful` });
   }
 
   static async getTransaction(req, res) {
