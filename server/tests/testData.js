@@ -8,6 +8,22 @@ const wrongTransactionId = {
 };
 
 // user
+const seededAdmin = {
+  email: 'adebade@gmail.com',
+  firstname: 'Ade',
+  lastname: 'Bade',
+  id: 1,
+  type: 'staff',
+  isadmin: true,
+};
+
+const existingEmail = {
+  email: 'adebade@gmail.com',
+  firstname: 'Ade',
+  lastname: 'Bade',
+  password: 'passwords',
+};
+
 const clientField = {
   email: 'testClient@gmail.com',
   password: 'asdfghjkl',
@@ -283,4 +299,6 @@ export {
   newAccount,
   newTrans,
   realAdmin,
+  existingEmail,
+  seededAdmin,
 };
