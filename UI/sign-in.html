@@ -48,18 +48,21 @@
                 <p class="center"> Not registered with us yet? <a href="register.html">Sign up</a></p>
             </div>
             <div class="form-div"> 
-                <form onSubmit="return goToDashboard()";>
+                <form id="signin">
                     <div>
                         <label>EMAIL ADDRESS</label><br>
-                        <input id="emailInput" type="email" , placeholder="Email Address" required>
+                        <input id="email" type="email" , placeholder="Email Address" required>
                     </div>
                     <div>
                         <label> <p id="password-label">PASSWORD </p></label>
-                        <input type="password", placeholder="*******" required>
+                        <input id="password" type="password", placeholder="*******" required>
                         <a href=""><p id="forgot-password-ptag">Forgot your password?</p></a>
                     </div>
                     <button type ="submit" id ="loginButton" class="btn">SIGN IN</button> 
                 </form>
+            </div>
+            <div id="message">
+
             </div>
         </section>
     </main>
@@ -80,5 +83,6 @@
         <p>Banka, copyright &copy; 2019</p>
         
     </footer>
+    <script src="js/auth.js"></script>
 </body>
 </html>
