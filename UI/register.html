@@ -48,25 +48,28 @@
                 <p class="center"> Already have an account? <a href="sign-in.html">Sign in</a></p>
             </div>
             <div class="form-div"> 
-                <form>
+                <form id="register">
                     <div>
                         <label>FIRSTNAME</label><br>
-                        <input type="text", placeholder="Firstname" required>
+                        <input type="text" placeholder="Firstname" id="firstname" required>
                     </div>
                     <div>
                         <label>LASTNAME</label><br>
-                        <input type="text", placeholder="Lastname" required>
+                        <input type="text" placeholder="Lastname" id="lastname" required>
                     </div>
                     <div>
                         <label>EMAIL ADDRESS</label><br>
-                        <input type="email", placeholder="Email Address" required>
+                        <input type="email" placeholder="Email Address" id="email" required>
                     </div>
                     <div>
                         <label> <p id="password-label">PASSWORD </p></label>
-                        <input type="password", placeholder="*******" required>
+                        <input type="password" placeholder="*******" id="password" required>
                     </div> 
-                    <button type="submit" location= "dashboard.html" class="btn">REGISTER</button> 
+                    <button location= "dashboard.html" class="btn">REGISTER</button> 
                 </form>
+            </div>
+            <div id="message">
+
             </div>
         </section>
     </main>
@@ -87,5 +90,6 @@
         <p>Banka, copyright &copy; 2019</p>
         
     </footer>
+    <script src="js/auth.js"></script>
 </body>
 </html>

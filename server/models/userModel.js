@@ -107,6 +107,5 @@ export default class User {
     } catch (error) {
       return error.message;
     }
-
   }
 }

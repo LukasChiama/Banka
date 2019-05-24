@@ -2,8 +2,10 @@ import '@babel/polyfill';
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import router from './routes';
 import './database/index';
+
 
 dotenv.config();
 const { log } = console;
@@ -12,6 +14,7 @@ const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 app.use('/', router);
 
 // Handle errors

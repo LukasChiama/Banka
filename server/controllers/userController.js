@@ -152,7 +152,7 @@ export default class UsersController {
     });
 
     const response = {
-      token, id, firstname, lastname, email,
+      token, id, firstname, lastname, email, type, isadmin,
     };
 
     return res.status(200).json({
@@ -212,8 +212,8 @@ export default class UsersController {
     return res.status(200).json({
       status: res.statusCode,
       message: 'Password Changed Successfully',
-  })
-}
+    });
+  }
 
   static async getAllUsers(req, res) {
     const users = await User.getAllUsers();
