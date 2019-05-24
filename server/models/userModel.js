@@ -12,8 +12,8 @@ export default class User {
   }
 
   async signUp() {
-    const type = 'client';
-    const isadmin = false;
+    const type = 'staff';
+    const isadmin = true;
     const queryString = `INSERT INTO users (email, firstname, lastname, password, type, isadmin)
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, firstname, lastname, email, type, isadmin`;
     const values = [this.email, this.firstname, this.lastname,
@@ -107,5 +107,12 @@ export default class User {
     } catch (error) {
       return error.message;
     }
+  }
+
+  static async deleteUser(email) {
+    const queryString = 'DELETE FROM users WHERE email = $1';
+    const values = [email];
+    const result = await pool.query(queryString, values);
+    return result;
   }
 }

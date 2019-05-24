@@ -235,6 +235,15 @@ const emptyTestAdmin = {
   password: '',
   isadmin: '',
 };
+
+const realAdmin = {
+  firstname: 'Ade',
+  lastname: 'Bade',
+  email: 'adebade@gmail.com',
+  password: 'adepassword',
+  isadmin: true,
+};
+
 export {
   wrongAcctNo,
   wrongTransactionId,
@@ -273,4 +282,5 @@ export {
   clientTransfer,
   newAccount,
   newTrans,
+  realAdmin,
 };

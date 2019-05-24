@@ -218,11 +218,11 @@ export default class UsersController {
   static async getAllUsers(req, res) {
     const users = await User.getAllUsers();
     const { type } = req.user;
-    if (type === 'staff') {
+    if (type !== 'client') {
       if (!users.length) {
-        return res.status(404).json({
-          status: 404,
-          error: 'No accounts found',
+        return res.status(200).json({
+          status: 200,
+          data: {},
         });
       }
       const results = users.map((result) => {
@@ -247,6 +247,23 @@ export default class UsersController {
     return res.status(401).json({
       status: 401,
       error: 'You are not authorized to view all users',
+    });
+  }
+
+  static async deleteUser(req, res) {
+    const { email } = req.params;
+    const { deleteUser } = User;
+    const userExists = await User.getUserByEmail(email);
+    if (!userExists) {
+      return res.status(404).json({
+        status: 404,
+        error: 'User not found',
+      });
+    }
+    await deleteUser(email);
+    return res.status(200).json({
+      status: 200,
+      message: 'Account successfuly deleted',
     });
   }
 }
