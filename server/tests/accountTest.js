@@ -167,18 +167,5 @@ describe('ACCOUNT TEST', () => {
         .send({ email: 'edefade@gmail.com', password: 'edepassword' });
       clientToken = response.body.data.token;
     });
-
-    it('Should return all accounts owned by a user', async () => {
-      try {
-        const res = await chai
-          .request(app)
-          .get('/api/v1/accounts')
-          .set({ Authorization: `Bearer ${clientToken}` });
-        expect(res).to.have.status(200);
-        expect(res.body).to.have.property('data');
-      } catch (err) {
-        throw new Error(err.message);
-      }
-    });
   });
 });
