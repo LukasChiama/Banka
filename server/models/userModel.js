@@ -12,8 +12,8 @@ export default class User {
   }
 
   async signUp() {
-    const type = 'staff';
-    const isadmin = true;
+    const type = 'client';
+    const isadmin = false;
     const queryString = `INSERT INTO users (email, firstname, lastname, password, type, isadmin)
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, firstname, lastname, email, type, isadmin`;
     const values = [this.email, this.firstname, this.lastname,
