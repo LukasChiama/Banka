@@ -9,6 +9,7 @@ const customErrorMessages = {
   alpha: ':attribute should contain only letters.',
   boolean: ':attribute should be boolean: true or false.',
   in: ':attribute should be one of the following: :in.',
+  // password_confirmation: ':"Confrim password" must match new password',
 };
 
 export default customErrorMessages;

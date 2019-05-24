@@ -196,4 +196,22 @@ export default class UsersController {
       accounts: results,
     });
   }
+
+  static async changePassword(req, res) {
+    const userId = req.user.id;
+    const { password } = await User.getUserById(userId);
+    const isValid = comparePassword(req.body.password, password);
+    if (!isValid) {
+      return res.status(401).json({
+        status: res.statusCode,
+        error: 'Invalid username/password',
+      });
+    }
+    const newPassword = hashPassword(req.body.newPassword);
+    await User.changePassword(userId, newPassword);
+    return res.status(200).json({
+      status: res.statusCode,
+      message: 'Password Changed Successfully',
+    });
+  }
 }
