@@ -24,6 +24,7 @@ import {
   staffField2,
   adminField4,
   adminField5,
+  clientField,
 } from './testData';
 
 const { expect } = chai;
@@ -93,6 +94,24 @@ describe('USER TEST', () => {
       expect(res).to.have.status(400);
       expect(res.body).to.have.property('error');
     });
+
+    it('it should signup user if all fields are given', async () => {
+      const res = await chai
+        .request(app)
+        .post('/api/v1/auth/signup')
+        .send(clientField);
+      expect(res).to.have.status(201);
+      expect(res.body).to.have.property('data');
+    });
+
+    it('it should not signup user if email already exists', async () => {
+      const res = await chai
+        .request(app)
+        .post('/api/v1/auth/signup')
+        .send(clientField);
+      expect(res).to.have.status(409);
+      expect(res.body).to.have.property('error');
+    });
   });
 
   describe('USER LOGIN', () => {
@@ -121,6 +140,15 @@ describe('USER TEST', () => {
         .send(wrongLogin);
       expect(res).to.have.status(400);
       expect(res.body).to.have.property('error');
+    });
+
+    it('it should sign in user if all fields are given', async () => {
+      const res = await chai
+        .request(app)
+        .post('/api/v1/auth/signin')
+        .send({ email: clientField.email, password: clientField.password });
+      expect(res).to.have.status(200);
+      expect(res.body).to.have.property('data');
     });
   });
 
