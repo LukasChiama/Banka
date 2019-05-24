@@ -6,16 +6,20 @@ import paramsValidate from '../middlewares/validateParams';
 
 const userRouter = new Router();
 const {
-  signUp, signin, allUserAccounts, createStaff, createAdmin, getAllUsers, changePassword
+  signUp,
+  signin,
+  allUserAccounts,
+  getAllUsers,
+  changePassword,
 } = userController;
 
 userRouter.post('/auth/signup', userValidate.client, signUp);
 
 userRouter.post('/auth/signin', userValidate.login, signin);
 
-userRouter.post('/staff', requireAuth, adminAuth, userValidate.login, createStaff);
+userRouter.post('/auth/signup/staff', requireAuth, adminAuth, userValidate.login, signUp);
 
-userRouter.post('/admin', requireAuth, adminAuth, userValidate.login, createAdmin);
+userRouter.post('/auth/signup/admin', requireAuth, adminAuth, userValidate.login, signUp);
 
 userRouter.patch('/auth/change-password', requireAuth, userValidate.changePassword, changePassword);
 
