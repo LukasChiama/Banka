@@ -11,6 +11,7 @@ const {
   allUserAccounts,
   getAllUsers,
   changePassword,
+  deleteUser,
 } = userController;
 
 userRouter.post('/auth/signup', userValidate.client, signUp);
@@ -31,6 +32,8 @@ userRouter.get(
   allUserAccounts,
 );
 
-userRouter.get('/users', requireAuth, staffAuth, getAllUsers);
+userRouter.get('/users', requireAuth, getAllUsers);
+
+userRouter.delete('/users/:email', requireAuth, adminAuth, paramsValidate.email, deleteUser);
 
 export default userRouter;

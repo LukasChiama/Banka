@@ -59,7 +59,6 @@ export default class TransactionController {
       return info;
     });
     if (req.body.sender) return null;
-
     return res.status(201).json({
       status: 201,
       data: {

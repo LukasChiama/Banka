@@ -18,6 +18,7 @@ import {
   adminField4,
   accountType,
   clientField,
+  realAdmin,
   clientTransfer,
   clientField2,
   existingEmail,
@@ -228,9 +229,35 @@ describe('USER TEST', () => {
       const res = await chai
         .request(app)
         .get('/api/v1/users')
-        .set({ Authorization: 'Bearer wrong token' });
+        .set({ Authorization: 'Bearer wrong token' })
+        .send({ email: 'adebade@gmail.com' });
       expect(res).to.have.status(403);
       expect(res.body).to.have.property('error');
+    });
+  });
+
+  describe('TEST DELETE A USER', () => {
+    let token;
+    before(async () => {
+      token = await Jwt.generateToken(realAdmin);
+    });
+    it('It should return user does not exist with status of 200 if user is not found', async () => {
+      const res = await chai
+        .request(app)
+        .get('/api/v1/users/email@mail.com')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ email: 'not found' });
+      expect(res).to.have.status(404);
+      expect(res).to.have.property('error');
+    });
+    it('It should return 200 if user is successfully deleted', async () => {
+      const res = await chai
+        .request(app)
+        .delete('/api/v1/users/adebade@gmail.com')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ email: 'adebade@gmail.com' });
+      expect(res).to.have.status(200);
+      expect(res.body).to.have.property('message');
     });
   });
 });

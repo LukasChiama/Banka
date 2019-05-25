@@ -108,4 +108,11 @@ export default class User {
       return error.message;
     }
   }
+
+  static async deleteUser(email) {
+    const queryString = 'DELETE FROM users WHERE email = $1';
+    const values = [email];
+    const result = await pool.query(queryString, values);
+    return result;
+  }
 }
