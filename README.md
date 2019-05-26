@@ -14,6 +14,7 @@ Banka is a light-weight core banking application that powers banking operations 
 - User (client) can create an account
 - User (client) can view account transaction history
 - User (client) can view a specific account transaction
+- User (client) can transafer fund to other account owners
 - Staff (cashier) can debit user (client) account
 - Staff (cashier) can credit user (client) account
 - Admin/staff can view all user accounts
@@ -21,7 +22,7 @@ Banka is a light-weight core banking application that powers banking operations 
 - Admin/staff can activate or deactivate an account
 - Admin/staff can delete a specific user account
 - Admin can create staff and admin user accounts
-
+- Users can change password
 
 ---
 ## Management
@@ -108,7 +109,7 @@ $ npm startDev
 > run test using the command below
 
 ```shell
-$ npm run test
+$ npm test
 ```
 
 
@@ -121,3 +122,7 @@ Andela
 ## Author
 
 Halimah Oladosu
+
+## Contributors
+
+LOS2-Team2

@@ -12,6 +12,8 @@ const {
   getAllUsers,
   changePassword,
   deleteUser,
+  sendResetLink,
+  resetPassword,
 } = userController;
 
 userRouter.post('/auth/signup', userValidate.client, signUp);
@@ -35,5 +37,8 @@ userRouter.get(
 userRouter.get('/users', requireAuth, getAllUsers);
 
 userRouter.delete('/users/:email', requireAuth, adminAuth, paramsValidate.email, deleteUser);
+
+userRouter.post('/resetlink', userValidate.sendResetLink, sendResetLink);
+userRouter.patch('/resetpassword/:id/:token', userValidate.resetPassword, resetPassword);
 
 export default userRouter;

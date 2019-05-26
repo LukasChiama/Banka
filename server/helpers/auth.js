@@ -16,4 +16,14 @@ export default class Jwt {
     const decoded = await jwt.verify(token, secretKey);
     return decoded;
   }
+
+  static async genResetPasswordToken(payload, oldPassworHash) {
+    const token = await jwt.sign(payload, oldPassworHash, { expiresIn: '0.5h' });
+    return token;
+  }
+
+  static async verifyRestPasswordToken(token, oldPassworHash) {
+    const decoded = await jwt.verify(token, oldPassworHash);
+    return decoded;
+  }
 }

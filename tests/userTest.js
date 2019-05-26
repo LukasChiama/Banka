@@ -1,7 +1,8 @@
 import '@babel/polyfill';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../index';
+import app from '../server/index';
+
 import {
   wrongLogin,
   clientField3,
@@ -19,12 +20,11 @@ import {
   accountType,
   clientField,
   realAdmin,
-  clientTransfer,
   clientField2,
   existingEmail,
   seededAdmin,
 } from './testData';
-import Jwt from '../helpers/auth';
+import Jwt from '../server/helpers/auth';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -258,6 +258,55 @@ describe('USER TEST', () => {
         .send({ email: 'adebade@gmail.com' });
       expect(res).to.have.status(200);
       expect(res.body).to.have.property('message');
+    });
+  });
+
+  describe('TEST SEND RESET PASSWORD LINK', () => {
+    it('should return 400 error code if email is invalid', async () => {
+      const response = await chai
+        .request(app)
+        .post('/api/v1/resetlink')
+        .send({ email: 'emailgmail.com' });
+      expect(response).to.have.status(400);
+      expect(response.body).to.have.property('error');
+    });
+
+    it('should return 404 error code if email does not exist', async () => {
+      const response = await chai
+        .request(app)
+        .post('/api/v1/resetlink')
+        .send({ email: 'example@gmail.com' });
+      expect(response).to.have.status(404);
+      expect(response.body).to.have.property('error');
+    });
+
+    it('should return 200 status code if reset link is sent', async () => {
+      const response = await chai
+        .request(app)
+        .post('/api/v1/resetlink')
+        .send({ email: 'edefade@gmail.com' });
+      expect(response).to.have.status(200);
+      expect(response.body).to.have.property('message').to.deep.equal('Password Reset Link Sent');
+    });
+  });
+
+  describe('TEST RESET PASSWORD', () => {
+    it('should return 400 error code if password is invalid', async () => {
+      const response = await chai
+        .request(app)
+        .patch('/api/v1/resetpassword/5/unknow_token')
+        .send({ password: 'ban' });
+      expect(response).to.have.status(400);
+      expect(response.body).to.have.property('error');
+    });
+
+    it('should respond with 500 error code if token or id is invalid', async () => {
+      const response = await chai
+        .request(app)
+        .patch('/api/v1/resetpassword/5/unknow_token')
+        .send({ password: 'banka2019' });
+      expect(response).to.have.status(500);
+      expect(response.body).to.have.property('error');
     });
   });
 });
