@@ -1,4 +1,3 @@
-import nodemailer from 'nodemailer';
 import Transaction from '../models/transactionModel';
 import Account from '../models/accountModel';
 import User from '../models/userModel';
@@ -7,13 +6,6 @@ import Mail from '../utils/Mail';
 const { getUserByEmail } = User;
 const { getAccount } = Account;
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.USER_EMAIL,
-    pass: process.env.USER_PASSWORD,
-  },
-});
 export default class TransactionController {
   static async debit(req, res) {
     const { accountnumber } = req.params;
@@ -54,7 +46,7 @@ export default class TransactionController {
 
     // Get email template and send email
     const emailNotification = new Mail(newTransaction, accountOwner, accountnumber, newbalance);
-    transporter.sendMail(emailNotification.getMailOptions(), (err, info) => {
+    Mail.transporter().sendMail(emailNotification.getMailOptions(), (err, info) => {
       if (err) return err;
       return info;
     });
@@ -103,7 +95,7 @@ export default class TransactionController {
 
     // Get email template and send email
     const emailNotification = new Mail(newTransaction, accountOwner, accountnumber, newbalance);
-    transporter.sendMail(emailNotification.getMailOptions(), (err, info) => {
+    Mail.transporter().sendMail(emailNotification.getMailOptions(), (err, info) => {
       if (err) return err;
       return info;
     });

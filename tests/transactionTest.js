@@ -1,7 +1,8 @@
 import '@babel/polyfill';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../index';
+import app from '../server/index';
+
 import {
   wrongAcctNo,
   wrongTransactionId,
@@ -16,9 +17,9 @@ import {
   newAccount,
   newTrans,
 } from './testData';
-import Jwt from '../helpers/auth';
-import Account from '../models/accountModel';
-import Transaction from '../models/transactionModel';
+import Jwt from '../server/helpers/auth';
+import Account from '../server/models/accountModel';
+import Transaction from '../server/models/transactionModel';
 
 const { expect } = chai;
 chai.use(chaiHttp);

@@ -4,7 +4,7 @@
 
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../index';
+import app from './server/index';
 import {
   wrongAcctNo,
   wrongAccountType,
@@ -13,7 +13,7 @@ import {
   clientField,
   adminField,
   staffField,
-} from './testData';
+} from './tests/testData';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -63,7 +63,7 @@ describe('ACCOUNT TEST', () => {
       .request(app)
       .post('/api/v1/auth/signup')
       .send(clientField);
-    console.log('>>>>>>>>>>token_for_response:', response)
+    console.log('>>>>>>>>>>token_for_response:', response);
     clientToken = response.body.data.token;
 
     const userResponse = await chai
@@ -134,99 +134,99 @@ describe('ACCOUNT TEST', () => {
     // });
   });
 
-//   describe('TEST ACTIVATE/DEACTIVATE ACCOUNT', () => {
-//     it('it should successfully change account status', async () => {
-//       const res = await chai.request(app)
-//         .patch(`/api/v1/accounts/${clientAcct}`)
-//         .set({ Authorization: `Bearer ${staffToken}` });
-//       expect(res).to.have.status(200);
-//       expect(res.body).to.have.property('status');
-//       expect(res.body.status).to.be.a('number');
-//       expect(res.body.status).to.equal(200);
-//       expect(res.body).to.be.an('object');
-//       expect(res.body).to.have.property('data');
-//       expect(res.body.data).to.be.an('object');
-//     });
+  //   describe('TEST ACTIVATE/DEACTIVATE ACCOUNT', () => {
+  //     it('it should successfully change account status', async () => {
+  //       const res = await chai.request(app)
+  //         .patch(`/api/v1/accounts/${clientAcct}`)
+  //         .set({ Authorization: `Bearer ${staffToken}` });
+  //       expect(res).to.have.status(200);
+  //       expect(res.body).to.have.property('status');
+  //       expect(res.body.status).to.be.a('number');
+  //       expect(res.body.status).to.equal(200);
+  //       expect(res.body).to.be.an('object');
+  //       expect(res.body).to.have.property('data');
+  //       expect(res.body.data).to.be.an('object');
+  //     });
 
-//     it('it should return 400 if account number is wrong', async () => {
-//       const res = await chai.request(app)
-//         .patch(`/api/v1/accounts/${wrongAcctNo}`)
-//         .set({ Authorization: `Bearer ${staffToken}` });
-//       expect(res).to.have.status(400);
-//       expect(res.body).to.have.property('error');
-//     });
+  //     it('it should return 400 if account number is wrong', async () => {
+  //       const res = await chai.request(app)
+  //         .patch(`/api/v1/accounts/${wrongAcctNo}`)
+  //         .set({ Authorization: `Bearer ${staffToken}` });
+  //       expect(res).to.have.status(400);
+  //       expect(res.body).to.have.property('error');
+  //     });
 
-//     it('it should return 403 if unauthorized', async () => {
-//       const res = await chai.request(app)
-//         .patch(`/api/v1/accounts/${clientAcct}`)
-//         .set({ Authorization: 'Bearer wrong token' });
-//       expect(res).to.have.status(403);
-//       expect(res.body).to.have.property('error');
-//     });
-//   });
+  //     it('it should return 403 if unauthorized', async () => {
+  //       const res = await chai.request(app)
+  //         .patch(`/api/v1/accounts/${clientAcct}`)
+  //         .set({ Authorization: 'Bearer wrong token' });
+  //       expect(res).to.have.status(403);
+  //       expect(res.body).to.have.property('error');
+  //     });
+  //   });
 
-//   describe('TEST GET SPECIFIC ACCOUNT', () => {
-//     it('it should successfully get a specific account', async () => {
-//       const res = await chai.request(app)
-//         .get(`/api/v1/accounts/${clientAcct}`)
-//         .set({ Authorization: `Bearer ${staffToken}` });
-//       expect(res).to.have.status(200);
-//       expect(res.body).to.have.property('status');
-//     });
+  //   describe('TEST GET SPECIFIC ACCOUNT', () => {
+  //     it('it should successfully get a specific account', async () => {
+  //       const res = await chai.request(app)
+  //         .get(`/api/v1/accounts/${clientAcct}`)
+  //         .set({ Authorization: `Bearer ${staffToken}` });
+  //       expect(res).to.have.status(200);
+  //       expect(res.body).to.have.property('status');
+  //     });
 
-//     it('it should return 400 if account number is wrong', async () => {
-//       const res = await chai.request(app)
-//         .get(`/api/v1/accounts/${wrongAcctNo}`)
-//         .set({ Authorization: `Bearer ${staffToken}` });
-//       expect(res).to.have.status(400);
-//       expect(res.body).to.have.property('error');
-//     });
+  //     it('it should return 400 if account number is wrong', async () => {
+  //       const res = await chai.request(app)
+  //         .get(`/api/v1/accounts/${wrongAcctNo}`)
+  //         .set({ Authorization: `Bearer ${staffToken}` });
+  //       expect(res).to.have.status(400);
+  //       expect(res.body).to.have.property('error');
+  //     });
 
-//     it('it should return 403 if unauthorized', async () => {
-//       const res = await chai.request(app)
-//         .get(`/api/v1/accounts/${clientAcct}`)
-//         .set({ Authorization: 'Bearer wrong token' });
-//       expect(res).to.have.status(403);
-//       expect(res.body).to.have.property('error');
-//     });
-//   });
+  //     it('it should return 403 if unauthorized', async () => {
+  //       const res = await chai.request(app)
+  //         .get(`/api/v1/accounts/${clientAcct}`)
+  //         .set({ Authorization: 'Bearer wrong token' });
+  //       expect(res).to.have.status(403);
+  //       expect(res.body).to.have.property('error');
+  //     });
+  //   });
 
-//   describe('TEST DELETE ACCOUNT', () => {
-//     it('it should successfully delete an account', async () => {
-//       const res = await chai.request(app)
-//         .delete(`/api/v1/accounts/${clientAcct}`)
-//         .set({ Authorization: `Bearer ${staffToken}` });
-//       expect(res).to.have.status(200);
-//       expect(res.body).to.have.property('message');
-//     });
+  //   describe('TEST DELETE ACCOUNT', () => {
+  //     it('it should successfully delete an account', async () => {
+  //       const res = await chai.request(app)
+  //         .delete(`/api/v1/accounts/${clientAcct}`)
+  //         .set({ Authorization: `Bearer ${staffToken}` });
+  //       expect(res).to.have.status(200);
+  //       expect(res.body).to.have.property('message');
+  //     });
 
-//     it('it should return 400 if account number is wrong', async () => {
-//       const res = await chai.request(app)
-//         .delete(`/api/v1/accounts/${wrongAcctNo}`)
-//         .set({ Authorization: `Bearer ${staffToken}` });
-//       expect(res).to.have.status(400);
-//       expect(res.body).to.have.property('error');
-//     });
+  //     it('it should return 400 if account number is wrong', async () => {
+  //       const res = await chai.request(app)
+  //         .delete(`/api/v1/accounts/${wrongAcctNo}`)
+  //         .set({ Authorization: `Bearer ${staffToken}` });
+  //       expect(res).to.have.status(400);
+  //       expect(res.body).to.have.property('error');
+  //     });
 
-//     it('it should return 403 if unauthorized', async () => {
-//       const res = await chai.request(app)
-//         .delete(`/api/v1/accounts/${clientAcct}`)
-//         .set({ Authorization: 'Bearer wrong token' });
-//       expect(res).to.have.status(403);
-//       expect(res.body).to.have.property('error');
-//     });
-//   });
+  //     it('it should return 403 if unauthorized', async () => {
+  //       const res = await chai.request(app)
+  //         .delete(`/api/v1/accounts/${clientAcct}`)
+  //         .set({ Authorization: 'Bearer wrong token' });
+  //       expect(res).to.have.status(403);
+  //       expect(res.body).to.have.property('error');
+  //     });
+  //   });
 
 
-//   describe('TEST GET ALL ACCOUNTS', () => {
-//     it('it should successfully get all bank accounts', async () => {
-//       const res = await chai.request(app)
-//         .get('/api/v1/accounts')
-//         .set({ Authorization: `Bearer ${staffToken}` });
-//       expect(res).to.have.status(200);
-//       expect(res.body).to.have.property('status');
-//       expect(res.body).to.have.property('data');
-//     });
+  //   describe('TEST GET ALL ACCOUNTS', () => {
+  //     it('it should successfully get all bank accounts', async () => {
+  //       const res = await chai.request(app)
+  //         .get('/api/v1/accounts')
+  //         .set({ Authorization: `Bearer ${staffToken}` });
+  //       expect(res).to.have.status(200);
+  //       expect(res.body).to.have.property('status');
+  //       expect(res.body).to.have.property('data');
+  //     });
 
 //     it('it should return 403 if unauthorized', async () => {
 //       const res = await chai.request(app)

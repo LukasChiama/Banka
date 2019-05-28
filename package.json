@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "test": "npm run dbtest && nyc mocha --timeout 1000000 --exit ./server/tests/**/*.js || true",
+    "test": "npm run dbtest && nyc mocha --timeout 1000000 --exit ./tests/**/*.js || true",
     "start": "npm run build && node build/index.js",
     "startDev": "nodemon --exec babel-node server/index.js",
     "build": "npm run clean && babel server --out-dir build",
@@ -25,16 +25,8 @@
   "author": "Team 2",
   "license": "ISC",
   "dependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/node": "^7.2.2",
     "@babel/polyfill": "^7.4.4",
-    "@babel/preset-env": "^7.4.3",
-    "@babel/register": "^7.4.0",
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.18.3",
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
@@ -44,6 +36,13 @@
     "validatorjs": "^3.15.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
